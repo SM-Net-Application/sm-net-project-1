@@ -16,33 +16,55 @@ public class Viewer {
 
 	}
 
-	public void init(MyFile selectedItem, double width, double height) {
+	private double newWidth;
+	private double newHeight;
+
+	public void init(MyFile selectedItem, double screenWidth, double screenHeight) {
+
+		this.newWidth = 0;
+		this.newHeight = 0;
 
 		Image image = new Image(selectedItem.toURI().toString());
 
 		imageView.setImage(image);
 		imageView.setPreserveRatio(true);
 
-		double widthImage = image.getWidth();
-		double heightImage = image.getHeight();
+		double imageWidth = image.getWidth();
+		double imageHeight = image.getHeight();
 
-		if (widthImage > heightImage) {
+		setNewSize(imageWidth, imageHeight, screenWidth, screenHeight);
 
-			double value = width * 100 / widthImage;
-			double newHeight = value * heightImage / 100;
-
-			imageView.setFitWidth(width);
-			imageView.setFitHeight(newHeight);
-
-		} else {
-
-			double value = height * 100 / heightImage;
-			double newWidth = value * widthImage / 100;
-
-			imageView.setFitHeight(height);
-			imageView.setFitWidth(newWidth);
-
+		if (this.newWidth > screenWidth || this.newHeight > screenHeight) {
+			reverseSize(screenWidth, screenHeight);
 		}
 
+		imageView.setFitWidth(this.newWidth);
+		imageView.setFitHeight(this.newHeight);
+	}
+
+	private void setNewSize(double width, double height, double screenWidth, double screenHeight) {
+		if (width > height) {
+			this.newWidth = screenWidth;
+			this.newHeight = getRatioSize(screenWidth, width, height);
+
+		} else {
+			this.newWidth = getRatioSize(screenHeight, height, width);
+			this.newHeight = screenHeight;
+		}
+	}
+
+	private void reverseSize(double screenWidth, double screenHeight) {
+		if (this.newWidth > this.newHeight) {
+			this.newWidth = getRatioSize(screenHeight, this.newHeight, this.newWidth);
+			this.newHeight = screenHeight;
+		} else {
+			this.newWidth = screenWidth;
+			this.newHeight = getRatioSize(screenWidth, this.newWidth, this.newHeight);
+		}
+	}
+
+	private double getRatioSize(double screenSize, double imageOriginalSize, double imageOtherSide) {
+		double ratio = screenSize * 100 / imageOriginalSize;
+		return (imageOtherSide * ratio / 100);
 	}
 }
