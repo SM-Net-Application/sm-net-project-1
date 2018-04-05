@@ -27,7 +27,7 @@ public class Main extends Application {
 			Scene scene = new Scene(anchorPane);
 			primaryStage.setScene(scene);
 
-			primaryStage.setTitle("SM-Net: MiniViewer 1.1");
+			primaryStage.setTitle("SM-Net: MiniViewer 1.2");
 			primaryStage.setResizable(false);
 			primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("view/icon.png")));
 

@@ -3,13 +3,14 @@ package com.sm.net.miniviewer.view;
 import com.sm.net.miniviewer.model.MyFile;
 
 import javafx.fxml.FXML;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 
-public class Viewer {
+public class ViewerVideo {
 
 	@FXML
-	private ImageView imageView;
+	private MediaView mediaView;
 
 	@FXML
 	private void initialize() {
@@ -18,28 +19,37 @@ public class Viewer {
 
 	private double newWidth;
 	private double newHeight;
+	private int videoWidth;
+	private int videoHeight;
 
 	public void init(MyFile selectedItem, double screenWidth, double screenHeight) {
 
 		this.newWidth = 0;
 		this.newHeight = 0;
 
-		Image image = new Image(selectedItem.toURI().toString());
+		Media media = new Media(selectedItem.toURI().toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		mediaPlayer.setAutoPlay(true);
+		mediaView.setMediaPlayer(mediaPlayer);
+		mediaView.setPreserveRatio(true);
 
-		imageView.setImage(image);
-		imageView.setPreserveRatio(true);
+		mediaPlayer.setOnReady(new Runnable() {
 
-		double imageWidth = image.getWidth();
-		double imageHeight = image.getHeight();
+			@Override
+			public void run() {
+				videoWidth = media.getWidth();
+				videoHeight = media.getHeight();
 
-		setNewSize(imageWidth, imageHeight, screenWidth, screenHeight);
+				setNewSize(videoWidth, videoHeight, screenWidth, screenHeight);
 
-		if (this.newWidth > screenWidth || this.newHeight > screenHeight) {
-			reverseSize(screenWidth, screenHeight);
-		}
+				if (newWidth > screenWidth || newHeight > screenHeight) {
+					reverseSize(screenWidth, screenHeight);
+				}
 
-		imageView.setFitWidth(this.newWidth);
-		imageView.setFitHeight(this.newHeight);
+				mediaView.setFitWidth(newWidth);
+				mediaView.setFitHeight(newHeight);
+			}
+		});
 	}
 
 	private void setNewSize(double width, double height, double screenWidth, double screenHeight) {

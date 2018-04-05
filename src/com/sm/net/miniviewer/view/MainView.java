@@ -79,6 +79,14 @@ public class MainView {
 
 	private void loadViewer(MyFile selectedItem) {
 
+		if (isImage(selectedItem))
+			loadViewerImage(selectedItem);
+		else if (isVideo(selectedItem))
+			loadViewerVideo(selectedItem);
+	}
+
+	private void loadViewerImage(MyFile selectedItem) {
+
 		try {
 
 			FXMLLoader fxmlLoader = new FXMLLoader();
@@ -97,15 +105,7 @@ public class MainView {
 
 			setStageViewer(stage);
 
-			ObservableList<Screen> screens = Screen.getScreens();
-
-			Screen screen = null;
-			if (screens.size() > 1) {
-				screen = screens.get(1);
-			} else {
-				screen = screens.get(0);
-			}
-			Rectangle2D bounds = screen.getBounds();
+			Rectangle2D bounds = getScreen();
 			double height = bounds.getHeight();
 			double width = bounds.getWidth();
 			double minX = bounds.getMinX();
@@ -116,7 +116,62 @@ public class MainView {
 			stage.setX(minX);
 			stage.setY(minY);
 
-			Viewer controller = (Viewer) fxmlLoader.getController();
+			ViewerImage controller = (ViewerImage) fxmlLoader.getController();
+			controller.init(selectedItem, width, height);
+
+			stage.show();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private Rectangle2D getScreen() {
+		
+		ObservableList<Screen> screens = Screen.getScreens();
+
+		Screen screen = null;
+		if (screens.size() > 1) {
+			screen = screens.get(1);
+		} else {
+			screen = screens.get(0);
+		}
+		Rectangle2D bounds = screen.getBounds();
+		return bounds;
+	}
+
+	private void loadViewerVideo(MyFile selectedItem) {
+
+		try {
+
+			FXMLLoader fxmlLoader = new FXMLLoader();
+			fxmlLoader.setLocation(Main.class.getResource("view/ViewerVideo.fxml"));
+			AnchorPane anchorPane;
+			anchorPane = (AnchorPane) fxmlLoader.load();
+
+			Scene scene = new Scene(anchorPane);
+			Stage stage = new Stage();
+			stage.setScene(scene);
+
+			stage.setResizable(false);
+			stage.setAlwaysOnTop(true);
+			stage.initStyle(StageStyle.TRANSPARENT);
+			stage.getIcons().add(new Image(Main.class.getResourceAsStream("view/icon.png")));
+
+			setStageViewer(stage);
+
+			Rectangle2D bounds = getScreen();
+			double height = bounds.getHeight();
+			double width = bounds.getWidth();
+			double minX = bounds.getMinX();
+			double minY = bounds.getMinY();
+
+			stage.setWidth(width);
+			stage.setHeight(height);
+			stage.setX(minX);
+			stage.setY(minY);
+
+			ViewerVideo controller = (ViewerVideo) fxmlLoader.getController();
 			controller.init(selectedItem, width, height);
 
 			stage.show();
@@ -148,7 +203,7 @@ public class MainView {
 				if (dragboard.hasFiles()) {
 					success = true;
 					for (File file : dragboard.getFiles()) {
-						if (isImage(file)) {
+						if (isImageOrVideo(file)) {
 							listView.getItems().add(new MyFile(file.getAbsolutePath()));
 						}
 					}
@@ -157,6 +212,13 @@ public class MainView {
 				event.consume();
 			}
 		});
+	}
+
+	private boolean isImageOrVideo(File file) {
+		if (isImage(file) || isVideo(file))
+			return true;
+		else
+			return false;
 	}
 
 	private boolean isImage(File file) {
@@ -173,6 +235,30 @@ public class MainView {
 				case "jpeg":
 				case "png":
 				case "bmp":
+					return true;
+				default:
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+
+	private boolean isVideo(File file) {
+
+		if (file != null) {
+
+			String extension = FilenameUtils.getExtension(file.getAbsolutePath());
+
+			if (extension.length() > 0) {
+
+				extension = extension.toLowerCase();
+				switch (extension) {
+				case "mpg":
+				case "avi":
+				case "wmv":
+				case "mp4":
+				case "m4v":
 					return true;
 				default:
 					return false;
