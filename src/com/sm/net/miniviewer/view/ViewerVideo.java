@@ -23,13 +23,16 @@ public class ViewerVideo {
 	private int videoWidth;
 	private int videoHeight;
 
+	MediaPlayer mediaPlayer;
+
 	public void init(MyFile selectedItem, double screenWidth, double screenHeight) {
 
 		this.newWidth = 0;
 		this.newHeight = 0;
+		this.mediaPlayer = null;
 
 		Media media = new Media(selectedItem.toURI().toString());
-		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		this.mediaPlayer = new MediaPlayer(media);
 		mediaPlayer.setAutoPlay(true);
 		mediaView.setMediaPlayer(mediaPlayer);
 		mediaView.setPreserveRatio(true);
@@ -38,7 +41,7 @@ public class ViewerVideo {
 
 			@Override
 			public void run() {
-				
+
 				videoWidth = media.getWidth();
 				videoHeight = media.getHeight();
 
@@ -54,7 +57,7 @@ public class ViewerVideo {
 	}
 
 	private void setNewSize(double width, double height, double screenWidth, double screenHeight) {
-		
+
 		if (width > height) {
 			this.newWidth = screenWidth;
 			this.newHeight = ScreenUtil.getRatioSize(screenWidth, width, height);
@@ -66,7 +69,7 @@ public class ViewerVideo {
 	}
 
 	private void reverseSize(double screenWidth, double screenHeight) {
-		
+
 		if (this.newWidth > this.newHeight) {
 			this.newWidth = ScreenUtil.getRatioSize(screenHeight, this.newHeight, this.newWidth);
 			this.newHeight = screenHeight;
@@ -75,5 +78,10 @@ public class ViewerVideo {
 			this.newHeight = ScreenUtil.getRatioSize(screenWidth, this.newWidth, this.newHeight);
 		}
 	}
-}
 
+	public void resetPlayer() {
+		mediaPlayer.dispose();
+		mediaPlayer = null;
+		mediaView.setMediaPlayer(null);
+	}
+}

@@ -25,6 +25,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 public class MainView {
 
@@ -127,7 +128,7 @@ public class MainView {
 	}
 
 	private Rectangle2D getScreen() {
-		
+
 		ObservableList<Screen> screens = Screen.getScreens();
 
 		Screen screen = null;
@@ -173,6 +174,14 @@ public class MainView {
 
 			ViewerVideo controller = (ViewerVideo) fxmlLoader.getController();
 			controller.init(selectedItem, width, height);
+
+			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+				@Override
+				public void handle(WindowEvent event) {
+					controller.resetPlayer();
+				}
+			});
 
 			stage.show();
 
@@ -284,4 +293,3 @@ public class MainView {
 		this.stageViewer = stageViewer;
 	}
 }
-
