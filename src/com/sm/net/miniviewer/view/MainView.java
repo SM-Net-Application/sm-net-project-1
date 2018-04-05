@@ -284,3 +284,4 @@ public class MainView {
 		this.stageViewer = stageViewer;
 	}
 }
+

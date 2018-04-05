@@ -38,14 +38,14 @@ public class ViewerVideo {
 
 			@Override
 			public void run() {
+				
 				videoWidth = media.getWidth();
 				videoHeight = media.getHeight();
 
 				setNewSize(videoWidth, videoHeight, screenWidth, screenHeight);
 
-				if (newWidth > screenWidth || newHeight > screenHeight) {
+				if (newWidth > screenWidth || newHeight > screenHeight)
 					reverseSize(screenWidth, screenHeight);
-				}
 
 				mediaView.setFitWidth(newWidth);
 				mediaView.setFitHeight(newHeight);
@@ -54,6 +54,7 @@ public class ViewerVideo {
 	}
 
 	private void setNewSize(double width, double height, double screenWidth, double screenHeight) {
+		
 		if (width > height) {
 			this.newWidth = screenWidth;
 			this.newHeight = ScreenUtil.getRatioSize(screenWidth, width, height);
@@ -65,6 +66,7 @@ public class ViewerVideo {
 	}
 
 	private void reverseSize(double screenWidth, double screenHeight) {
+		
 		if (this.newWidth > this.newHeight) {
 			this.newWidth = ScreenUtil.getRatioSize(screenHeight, this.newHeight, this.newWidth);
 			this.newHeight = screenHeight;
@@ -74,3 +76,4 @@ public class ViewerVideo {
 		}
 	}
 }
+
