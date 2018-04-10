@@ -23,7 +23,7 @@ public class ViewerVideo {
 	private int videoWidth;
 	private int videoHeight;
 
-	MediaPlayer mediaPlayer;
+	private MediaPlayer mediaPlayer;
 
 	public void init(MyFile selectedItem, double screenWidth, double screenHeight) {
 

@@ -25,7 +25,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 
 public class MainView {
 
@@ -51,6 +50,7 @@ public class MainView {
 
 	private Stage stage;
 	private Stage stageViewer;
+	private ViewerVideo controllerViewerVideo;
 
 	private void setButtonEventHandler() {
 
@@ -62,6 +62,10 @@ public class MainView {
 
 					if (stageViewer != null) {
 						closeViewer();
+						if (controllerViewerVideo != null) {
+							controllerViewerVideo.resetPlayer();
+						}
+						setControllerViewerVideo(null);
 						buttonView.setText("Visualizza");
 					} else {
 						loadViewer(listView.getSelectionModel().getSelectedItem());
@@ -173,15 +177,8 @@ public class MainView {
 			stage.setY(minY);
 
 			ViewerVideo controller = (ViewerVideo) fxmlLoader.getController();
+			setControllerViewerVideo(controller);
 			controller.init(selectedItem, width, height);
-
-			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-
-				@Override
-				public void handle(WindowEvent event) {
-					controller.resetPlayer();
-				}
-			});
 
 			stage.show();
 
@@ -291,5 +288,13 @@ public class MainView {
 
 	public void setStageViewer(Stage stageViewer) {
 		this.stageViewer = stageViewer;
+	}
+
+	public ViewerVideo getControllerViewerVideo() {
+		return controllerViewerVideo;
+	}
+
+	public void setControllerViewerVideo(ViewerVideo controllerViewerVideo) {
+		this.controllerViewerVideo = controllerViewerVideo;
 	}
 }
