@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class Main extends Application {
-	
+
 	@Override
 	public void start(Stage primaryStage) {
 
@@ -55,4 +55,3 @@ public class Main extends Application {
 		launch(args);
 	}
 }
-

@@ -17,11 +17,25 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </ListView>
-                  <Button fx:id="buttonView" maxWidth="1.7976931348623157E308" mnemonicParsing="false" VBox.vgrow="ALWAYS">
+                  <HBox>
+                     <children>
+                        <Button fx:id="buttonView" maxWidth="1.7976931348623157E308" mnemonicParsing="false" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button fx:id="buttonWeb" mnemonicParsing="false" text="Web">
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <TextField fx:id="textFieldUrl">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
-                  </Button>
+                  </TextField>
                </children>
             </VBox>
          </children>

@@ -43,7 +43,7 @@ public class ViewerImage {
 	}
 
 	private void setNewSize(double width, double height, double screenWidth, double screenHeight) {
-		
+
 		if (width > height) {
 			this.newWidth = screenWidth;
 			this.newHeight = ScreenUtil.getRatioSize(screenWidth, width, height);
@@ -55,7 +55,7 @@ public class ViewerImage {
 	}
 
 	private void reverseSize(double screenWidth, double screenHeight) {
-		
+
 		if (this.newWidth > this.newHeight) {
 			this.newWidth = ScreenUtil.getRatioSize(screenHeight, this.newHeight, this.newWidth);
 			this.newHeight = screenHeight;
@@ -65,4 +65,3 @@ public class ViewerImage {
 		}
 	}
 }
-

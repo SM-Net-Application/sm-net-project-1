@@ -17,6 +17,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -32,6 +33,10 @@ public class MainView {
 	private ListView<MyFile> listView;
 	@FXML
 	private Button buttonView;
+	@FXML
+	private Button buttonWeb;
+	@FXML
+	private TextField textFieldUrl;
 
 	@FXML
 	private void initialize() {
@@ -39,6 +44,12 @@ public class MainView {
 		listView.setStyle("-fx-font: 15px System");
 		buttonView.setStyle("-fx-font: 15px System");
 		buttonView.setText("Visualizza");
+
+		buttonWeb.setStyle("-fx-font: 15px System");
+		buttonWeb.setText("Browser");
+
+		textFieldUrl.setStyle("-fx-font: 15px System");
+		textFieldUrl.setText("https://www.jw.org/");
 
 		setListViewDragAndDrop();
 		setButtonEventHandler();
@@ -58,23 +69,89 @@ public class MainView {
 
 			@Override
 			public void handle(ActionEvent event) {
+
 				if (listView.getSelectionModel().getSelectedIndex() > -1) {
 
 					if (stageViewer != null) {
-						closeViewer();
-						if (controllerViewerVideo != null) {
-							controllerViewerVideo.resetPlayer();
-						}
-						setControllerViewerVideo(null);
-						buttonView.setText("Visualizza");
+						close();
 					} else {
 						loadViewer(listView.getSelectionModel().getSelectedItem());
 						buttonView.setText("Nascondi");
 					}
 
+				} else {
+					if (stageViewer != null) {
+						close();
+					}
+				}
+			}
+
+			private void close() {
+				closeViewer();
+				if (controllerViewerVideo != null) {
+					controllerViewerVideo.resetPlayer();
+					setControllerViewerVideo(null);
+				}
+				buttonView.setText("Visualizza");
+			}
+		});
+
+		buttonWeb.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				if (stageViewer == null) {
+					loadWeb();
+					buttonView.setText("Nascondi");
 				}
 			}
 		});
+	}
+
+	private void loadWeb() {
+
+		String url = textFieldUrl.getText();
+
+		if (url.length() > 0) {
+
+			try {
+
+				FXMLLoader fxmlLoader = new FXMLLoader();
+				fxmlLoader.setLocation(Main.class.getResource("view/ViewerWeb.fxml"));
+				AnchorPane anchorPane;
+				anchorPane = (AnchorPane) fxmlLoader.load();
+
+				Scene scene = new Scene(anchorPane);
+				Stage stage = new Stage();
+				stage.setScene(scene);
+
+				stage.setResizable(false);
+				stage.setAlwaysOnTop(true);
+				stage.initStyle(StageStyle.TRANSPARENT);
+				stage.getIcons().add(new Image(Main.class.getResourceAsStream("view/icon.png")));
+
+				setStageViewer(stage);
+
+				Rectangle2D bounds = getScreen();
+				double height = bounds.getHeight();
+				double width = bounds.getWidth();
+				double minX = bounds.getMinX();
+				double minY = bounds.getMinY();
+
+				stage.setWidth(width);
+				stage.setHeight(height);
+				stage.setX(minX);
+				stage.setY(minY);
+
+				ViewerWeb controller = (ViewerWeb) fxmlLoader.getController();
+				controller.init(width, height, url);
+
+				stage.show();
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void closeViewer() {
@@ -95,7 +172,7 @@ public class MainView {
 		try {
 
 			FXMLLoader fxmlLoader = new FXMLLoader();
-			fxmlLoader.setLocation(Main.class.getResource("view/Viewer.fxml"));
+			fxmlLoader.setLocation(Main.class.getResource("view/ViewerImage.fxml"));
 			AnchorPane anchorPane;
 			anchorPane = (AnchorPane) fxmlLoader.load();
 
@@ -297,4 +374,5 @@ public class MainView {
 	public void setControllerViewerVideo(ViewerVideo controllerViewerVideo) {
 		this.controllerViewerVideo = controllerViewerVideo;
 	}
+
 }
